@@ -3,6 +3,13 @@ import React, {
   useMemo,
   useEffect,
 } from 'react';
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  ResponsiveContainer,
+} from 'recharts';
 import { useApp } from '../context/AppContext';
 import { EVENTS, STUDENT } from '../data/events';
 import EventCard from '../components/EventCard';
@@ -15,6 +22,18 @@ export default function Home() {
   const [search, setSearch] = useState('');
   const [events, setEvents] = useState(EVENTS);
   const { registered, unreadCount } = useApp();
+  const matchData = [
+  { name: 'Hackathons', value: 78 },
+  { name: 'AI/ML', value: 65 },
+  { name: 'Workshops', value: 52 },
+  { name: 'Cultural', value: 22 },
+];
+const COLORS = [
+  '#6366f1',
+  '#8b5cf6',
+  '#06b6d4',
+  '#10b981',
+];
   useEffect(() => {
 
   fetchEvents();
@@ -155,6 +174,101 @@ const fetchEvents = async () => {
           <StatCard num={events.length} label="Events this month" color="#818cf8" />
           <StatCard num={registered.size} label="You're registered" color="#10b981" />
         </div>
+
+        {/* AI Match Analytics */}
+
+<div
+  style={{
+    background: '#1e293b',
+    border: '1px solid #334155',
+    borderRadius: 20,
+    padding: 20,
+    marginBottom: 20,
+  }}
+>
+
+  <div
+    style={{
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 20,
+    }}
+  >
+
+    <div>
+
+      <h3
+        style={{
+          color: 'white',
+          marginBottom: 6,
+          fontSize: 18,
+        }}
+      >
+        Event Match Analytics
+      </h3>
+
+      <p
+        style={{
+          color: '#64748b',
+          fontSize: 12,
+        }}
+      >
+        Based on your profile interests
+      </p>
+
+    </div>
+
+    <div
+      style={{
+        background: '#0f172a',
+        padding: '8px 14px',
+        borderRadius: 12,
+        color: '#818cf8',
+        fontWeight: 700,
+        fontSize: 13,
+      }}
+    >
+      82% Match
+    </div>
+
+  </div>
+
+  <div style={{ width: '100%', height: 250 }}>
+
+    <ResponsiveContainer>
+
+      <PieChart>
+
+        <Pie
+          data={matchData}
+          cx="50%"
+          cy="50%"
+          outerRadius={85}
+          dataKey="value"
+          label
+        >
+
+          {matchData.map((entry, index) => (
+
+            <Cell
+              key={`cell-${index}`}
+              fill={COLORS[index % COLORS.length]}
+            />
+
+          ))}
+
+        </Pie>
+
+        <Tooltip />
+
+      </PieChart>
+
+    </ResponsiveContainer>
+
+  </div>
+
+</div>
 
         {/* Section label */}
         <div style={{
