@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { STUDENT, EVENTS } from '../data/events';
 import { useApp } from '../context/AppContext';
 
@@ -14,8 +14,7 @@ const MENU = [
 
 export default function Profile() {
   const { registered, addToast } = useApp();
-  const navigate = useNavigate();
-
+  
   const handleMenu = (label) => {
     addToast(`${label} — coming soon!`, 'info');
   };

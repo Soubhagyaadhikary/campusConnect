@@ -21,7 +21,7 @@ export default function Home() {
   const [filter, setFilter] = useState('All');
   const [search, setSearch] = useState('');
   const [events, setEvents] = useState(EVENTS);
-  const { registered, unreadCount } = useApp();
+  const { registered} = useApp();
   const matchData = [
   { name: 'Hackathons', value: 78 },
   { name: 'AI/ML', value: 65 },
@@ -67,7 +67,7 @@ const fetchEvents = async () => {
         ev.venue.toLowerCase().includes(search.toLowerCase());
       return matchCat && matchSearch;
     });
-  }, [filter, search]);
+  }, [filter, search, events]);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
