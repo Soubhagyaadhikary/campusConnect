@@ -52,7 +52,7 @@ const registerEvent = useCallback((event) => {
       value={{
         registered,
         isRegistered,
-        toggleRegistration,
+       registerEvent,
         toasts,
         addToast,
         removeToast,
