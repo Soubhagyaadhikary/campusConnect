@@ -1,25 +1,38 @@
 import React, { useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
+
 import PageHeader from '../components/PageHeader';
+import { supabase } from '../supabaseClient';
 
 export default function CreateEvent() {
 
   const [title, setTitle] = useState('');
   const [date, setDate] = useState('');
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e) => {
 
-    const newEvent = {
-      id: uuidv4(),
-      title,
-      date,
-    };
+  e.preventDefault();
 
-    console.log(newEvent);
+  const { error } = await supabase
+    .from('events')
+    .insert([
+      {
+        title,
+        date,
+      },
+    ]);
+
+  if (error) {
+
+    alert(error.message);
+
+  } else {
 
     alert('Event Created Successfully');
-  };
+
+    setTitle('');
+    setDate('');
+  }
+};
 
   return (
     <div

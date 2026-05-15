@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '../supabaseClient';
 
 const skills = [
   'JavaScript',
@@ -10,6 +11,16 @@ const skills = [
   'Cloud Computing',
   'Cybersecurity',
   'App Development',
+];
+const careerGoals = [
+  'Software Engineer',
+  'Research Scientist',
+  'Entrepreneur',
+  'Product Manager',
+  'Data Analyst',
+  'Civil Engineer',
+  'Automotive Designer',
+  'Core Industry Expert',
 ];
 
 export default function StudentRegister() {
@@ -24,6 +35,7 @@ export default function StudentRegister() {
     phone: '',
     branch: 'CSE',
     interests: [],
+    careerGoals: [],
   });
 
   const toggleInterest = (skill) => {
@@ -45,12 +57,47 @@ export default function StudentRegister() {
     });
   };
 
-  const handleComplete = () => {
+  const toggleCareerGoal = (goal) => {
 
-    localStorage.setItem(
-      'studentProfile',
-      JSON.stringify(formData)
-    );
+  setFormData((prev) => {
+
+    const exists =
+      prev.careerGoals.includes(goal);
+
+    return {
+
+      ...prev,
+
+      careerGoals: exists
+        ? prev.careerGoals.filter(
+            (g) => g !== goal
+          )
+        : [...prev.careerGoals, goal],
+    };
+  });
+};
+
+const handleComplete = async () => {
+
+  const { error } = await supabase
+    .from('profiles')
+    .insert([
+      {
+        full_name: formData.name,
+        roll: formData.roll,
+        phone: formData.phone,
+        branch: formData.branch,
+        interests: formData.interests,
+        career_goals:
+          formData.careerGoals,
+      },
+    ]);
+
+  if (error) {
+
+    alert(error.message);
+
+  } else {
 
     localStorage.setItem(
       'student',
@@ -58,7 +105,8 @@ export default function StudentRegister() {
     );
 
     navigate('/student-home');
-  };
+  }
+};
 
   return (
 
@@ -318,6 +366,62 @@ export default function StudentRegister() {
             })}
 
           </div>
+
+{/* Career Goals */}
+
+<h3
+  style={{
+    marginBottom: 16,
+    color: 'white',
+  }}
+>
+  Career Goals
+</h3>
+
+<div
+  style={{
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: 12,
+    marginBottom: 40,
+  }}
+>
+
+  {careerGoals.map((goal) => {
+
+    const active =
+      formData.careerGoals.includes(goal);
+
+    return (
+
+      <button
+        key={goal}
+        type="button"
+        onClick={() =>
+          toggleCareerGoal(goal)
+        }
+        style={{
+          padding: '12px 18px',
+          borderRadius: 999,
+          border: active
+            ? '1px solid #8b5cf6'
+            : '1px solid #334155',
+
+          background: active
+            ? '#7c3aed'
+            : '#111827',
+
+          color: 'white',
+          cursor: 'pointer',
+          transition: '0.2s',
+        }}
+      >
+        {goal}
+      </button>
+    );
+  })}
+
+</div>
 
           <div
             style={{

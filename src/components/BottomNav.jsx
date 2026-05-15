@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 
 const NAV_ITEMS = [
-  { path: '/',              icon: 'ti-home',           label: 'Home'      },
+  { path: '/student-home',  icon: 'ti-home',           label: 'Home'      },
   { path: '/my-events',    icon: 'ti-calendar-event', label: 'My Events' },
   { path: '/notifications',icon: 'ti-bell',            label: 'Alerts'    },
   { path: '/profile',      icon: 'ti-user-circle',    label: 'Profile'   },

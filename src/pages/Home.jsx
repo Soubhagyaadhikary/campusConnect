@@ -1,17 +1,44 @@
-import React, { useState, useMemo } from 'react';
+import React, {
+  useState,
+  useMemo,
+  useEffect,
+} from 'react';
 import { useApp } from '../context/AppContext';
 import { EVENTS, STUDENT } from '../data/events';
 import EventCard from '../components/EventCard';
+import { supabase } from '../supabaseClient';
 
 const CATEGORIES = ['All', 'Workshop', 'Hackathon', 'Cultural', 'Placement', 'Seminar', 'Club'];
 
 export default function Home() {
   const [filter, setFilter] = useState('All');
   const [search, setSearch] = useState('');
+  const [events, setEvents] = useState(EVENTS);
   const { registered, unreadCount } = useApp();
+  useEffect(() => {
+
+  fetchEvents();
+
+}, []);
+
+const fetchEvents = async () => {
+
+  const { data, error } =
+    await supabase
+      .from('events')
+      .select('*')
+      .order('created_at', {
+        ascending: false,
+      });
+
+  if (!error) {
+
+    setEvents([...data, ...EVENTS]);
+  }
+};
 
   const filtered = useMemo(() => {
-    return EVENTS.filter((ev) => {
+    return events.filter((ev) => {
       const matchCat = filter === 'All' || ev.category === filter;
       const matchSearch =
         !search ||
@@ -125,7 +152,7 @@ export default function Home() {
       <div style={{ flex: 1, overflowY: 'auto', padding: '12px 16px 16px' }}>
         {/* Stats */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 16 }}>
-          <StatCard num={EVENTS.length} label="Events this month" color="#818cf8" />
+          <StatCard num={events.length} label="Events this month" color="#818cf8" />
           <StatCard num={registered.size} label="You're registered" color="#10b981" />
         </div>
 
