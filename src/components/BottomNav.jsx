@@ -4,6 +4,11 @@ import { useApp } from '../context/AppContext';
 
 const NAV_ITEMS = [
   { path: '/student-home',  icon: 'ti-home',           label: 'Home'      },
+  {
+  path: '/community',
+  icon: 'ti-users',
+  label: 'Community',
+},
   { path: '/my-events',    icon: 'ti-calendar-event', label: 'My Events' },
   { path: '/notifications',icon: 'ti-bell',            label: 'Alerts'    },
   { path: '/profile',      icon: 'ti-user-circle',    label: 'Profile'   },

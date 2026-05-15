@@ -13,7 +13,9 @@ import Home from './pages/Home';
 import EventDetail from './pages/EventDetail';
 import MyEvents from './pages/MyEvents';
 import Notifications from './pages/Notifications';
+
 import Profile from './pages/Profile';
+import Community from './pages/Community';
 import ScrollTopButton from './components/ScrollTopButton';
 
 import LoginSelect from './pages/LoginSelect';
@@ -91,6 +93,10 @@ const hideBottomNav =
 <Route
   path="/student-home"
   element={<Home />}
+/>
+<Route
+  path="/community"
+  element={<Community />}
 />
           <Route path="/event/:id" element={<EventDetail />} />
           <Route path="/my-events" element={<MyEvents />} />

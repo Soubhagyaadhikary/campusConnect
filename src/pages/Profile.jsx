@@ -13,8 +13,11 @@ const MENU = [
 ];
 
 export default function Profile() {
+  const student = JSON.parse(
+  localStorage.getItem('studentProfile')
+);
   const { registered, addToast } = useApp();
-  
+
   const handleMenu = (label) => {
     addToast(`${label} — coming soon!`, 'info');
   };
@@ -75,7 +78,7 @@ export default function Profile() {
             margin: '0 auto 12px',
             border: '3px solid #6366f1',
           }}>
-            {STUDENT.initials}
+            {student?.name?.charAt(0)}
           </div>
           <h2 style={{
             fontFamily: "'Syne', sans-serif",
@@ -84,13 +87,13 @@ export default function Profile() {
             color: '#f1f5f9',
             marginBottom: 4,
           }}>
-            {STUDENT.name}
+            {student?.name}
           </h2>
           <p style={{ color: '#64748b', fontSize: 12 }}>
-            {STUDENT.department} · {STUDENT.year}
+            {student?.branch} · {STUDENT.year}
           </p>
           <p style={{ color: '#475569', fontSize: 11, marginTop: 3 }}>
-            Roll No: {STUDENT.rollNo}
+            Roll No: {student?.roll}
           </p>
 
           {/* Stats */}
@@ -172,8 +175,16 @@ export default function Profile() {
             marginBottom: 16,
           }}>
             {[
-              { icon: 'ti-mail', label: 'Email', value: STUDENT.email },
-              { icon: 'ti-phone', label: 'Phone', value: STUDENT.phone },
+              {
+  icon: 'ti-mail',
+  label: 'Email',
+  value: 'student@campusconnect.com',
+},
+{
+  icon: 'ti-phone',
+  label: 'Phone',
+  value: student?.phone,
+},
             ].map(({ icon, label, value }, i) => (
               <div key={label} style={{
                 display: 'flex',

@@ -97,15 +97,22 @@ const handleComplete = async () => {
 
     alert(error.message);
 
-  } else {
+} else {
 
-    localStorage.setItem(
-      'student',
-      'true'
-    );
+  // Save login session
+  localStorage.setItem(
+    'student',
+    'true'
+  );
 
-    navigate('/student-home');
-  }
+  // Save dynamic student profile
+  localStorage.setItem(
+    'studentProfile',
+    JSON.stringify(formData)
+  );
+
+  navigate('/student-home');
+}
 };
 
   return (
