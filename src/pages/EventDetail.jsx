@@ -9,6 +9,18 @@ export default function EventDetail() {
   const navigate = useNavigate();
   const { isRegistered, toggleRegistration } = useApp();
   const [showQR, setShowQR] = useState(false);
+  const [showForm, setShowForm] =
+  useState(false);
+  const [registrationComplete, setRegistrationComplete] =
+  useState(false);
+
+const [formData, setFormData] =
+  useState({
+    name: '',
+    phone: '',
+    department: '',
+    reason: '',
+  });
 
   const event = EVENTS.find((e) => e.id === Number(id));
   if (!event) {
@@ -24,7 +36,8 @@ export default function EventDetail() {
     );
   }
 
-  const reg = isRegistered(event.id);
+const reg =
+  isRegistered(event.id) || registrationComplete;
 
   const exportCalendar = () => {
     const start = event.dateObj.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
@@ -162,7 +175,14 @@ export default function EventDetail() {
 
           {/* CTA Buttons */}
           <button
-            onClick={() => toggleRegistration(event)}
+            onClick={() => {
+
+  if (!reg) {
+
+    setShowForm(true);
+
+  }
+}}
             style={{
               width: '100%',
               background: reg ? '#064e3b' : '#6366f1',
@@ -184,18 +204,24 @@ export default function EventDetail() {
             }}
           >
             <i className={`ti ${reg ? 'ti-check' : 'ti-calendar-plus'}`} style={{ fontSize: 18 }} />
-            {reg ? 'Registered!' : 'Register Now'}
+            {reg ? 'Registered!' : 'Continue Registration'}
           </button>
 
           {/* Secondary buttons row */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 10 }}>
             <SecondaryBtn
-              icon="ti-qrcode"
-              label="View QR Code"
-              onClick={() => setShowQR(true)}
-              disabled={!reg}
-              hint={!reg ? 'Register first' : undefined}
-            />
+  icon="ti-qrcode"
+  label="View QR Code"
+  onClick={() => {
+
+    if (reg) {
+
+      setShowQR(true);
+    }
+  }}
+  disabled={!reg}
+  hint={!reg ? 'Complete registration first' : undefined}
+/>
             <SecondaryBtn
               icon="ti-calendar-plus"
               label="Add to Calendar"
@@ -205,6 +231,172 @@ export default function EventDetail() {
         </div>
       </div>
 
+{/* Registration Form Modal */}
+
+{showForm && (
+
+  <div
+    style={{
+      position: 'fixed',
+      inset: 0,
+      background: 'rgba(0,0,0,0.75)',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      zIndex: 999,
+      padding: 20,
+    }}
+  >
+
+    <div
+      style={{
+        width: '100%',
+        maxWidth: 380,
+        background: '#1e293b',
+        borderRadius: 22,
+        padding: 24,
+        border: '1px solid #334155',
+      }}
+    >
+
+      <h2
+        style={{
+          color: 'white',
+          marginBottom: 20,
+          fontSize: 22,
+          fontWeight: 800,
+        }}
+      >
+        Event Registration
+      </h2>
+
+      {/* Inputs */}
+
+      {[
+        {
+          key: 'name',
+          placeholder: 'Full Name',
+        },
+        {
+          key: 'phone',
+          placeholder: 'Phone Number',
+        },
+        {
+          key: 'department',
+          placeholder: 'Department',
+        },
+      ].map((field) => (
+
+        <input
+          key={field.key}
+          placeholder={field.placeholder}
+          value={formData[field.key]}
+          onChange={(e) =>
+            setFormData({
+              ...formData,
+              [field.key]: e.target.value,
+            })
+          }
+          style={{
+            width: '100%',
+            padding: 14,
+            marginBottom: 14,
+            borderRadius: 12,
+            border: '1px solid #334155',
+            background: '#0f172a',
+            color: 'white',
+            boxSizing: 'border-box',
+          }}
+        />
+
+      ))}
+
+      {/* Reason */}
+
+      <textarea
+        placeholder="Why are you interested in this event?"
+        value={formData.reason}
+        onChange={(e) =>
+          setFormData({
+            ...formData,
+            reason: e.target.value,
+          })
+        }
+        style={{
+          width: '100%',
+          padding: 14,
+          height: 90,
+          marginBottom: 20,
+          borderRadius: 12,
+          border: '1px solid #334155',
+          background: '#0f172a',
+          color: 'white',
+          boxSizing: 'border-box',
+        }}
+      />
+
+      {/* Buttons */}
+
+      <div
+        style={{
+          display: 'flex',
+          gap: 12,
+        }}
+      >
+
+        <button
+          onClick={() => {
+
+  if (!reg) {
+
+    setShowForm(true);
+  }
+}}
+          style={{
+            flex: 1,
+            padding: 14,
+            borderRadius: 12,
+            border: '1px solid #334155',
+            background: '#111827',
+            color: 'white',
+            cursor: 'pointer',
+          }}
+        >
+          Cancel
+        </button>
+
+        <button
+          onClick={() => {
+
+            toggleRegistration(event);
+
+setRegistrationComplete(true);
+
+setShowForm(false);
+
+setShowQR(true);
+          }}
+          style={{
+            flex: 1,
+            padding: 14,
+            borderRadius: 12,
+            border: 'none',
+            background:
+              'linear-gradient(135deg,#6366f1,#8b5cf6)',
+            color: 'white',
+            fontWeight: 700,
+            cursor: 'pointer',
+          }}
+        >
+          Complete
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+)}
       {showQR && <QRModal event={event} onClose={() => setShowQR(false)} />}
     </>
   );

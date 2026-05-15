@@ -4,7 +4,7 @@ import { NOTIFICATIONS } from '../data/events';
 const AppContext = createContext(null);
 
 export function AppProvider({ children }) {
-  const [registered, setRegistered] = useState(new Set([1, 3]));
+  const [registered, setRegistered] = useState(new Set());
   const [toasts, setToasts] = useState([]);
   const [notifications, setNotifications] = useState(NOTIFICATIONS);
   const [activeTab, setActiveTab] = useState('home');
@@ -19,19 +19,23 @@ export function AppProvider({ children }) {
     }, 3000);
   }, []);
 
-  const toggleRegistration = useCallback((event) => {
-    setRegistered((prev) => {
-      const next = new Set(prev);
-      if (next.has(event.id)) {
-        next.delete(event.id);
-        addToast(`Unregistered from ${event.title}`, 'info');
-      } else {
-        next.add(event.id);
-        addToast(`Registered! QR code is ready.`, 'success');
-      }
-      return next;
-    });
-  }, [addToast]);
+const registerEvent = useCallback((event) => {
+
+  setRegistered((prev) => {
+
+    const next = new Set(prev);
+
+    next.add(event.id);
+
+    return next;
+  });
+
+  addToast(
+    `Registered! QR code is ready.`,
+    'success'
+  );
+
+}, [addToast]);
 
 
 
